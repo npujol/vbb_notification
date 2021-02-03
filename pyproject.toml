@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "thermondo"
+name = "vbb_notification"
 version = "0.1.0"
 description = ""
 authors = ["npujol <naivy.luna@gmail.com>"]
@@ -16,3 +16,6 @@ rope = "^0.18.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+vbb = 'vbb_notification:cli'
