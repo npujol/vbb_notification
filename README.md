@@ -15,8 +15,8 @@ poetry run vbb setup-vbbjourney
 ```
 
 ## Default
-The default values are the followings:
-- Keywords about your current location [pankow]: 
-- Keywords about the location you want to reach [alexanderplatz]: 
-- Time to make the daily commute (hh:mm) [18:00]: 
-- Advance notice time (number) [15]:
+The default values are the followings
+- Keywords about your current location [pankow]
+- Keywords about the location you want to reach [alexanderplatz]
+- Time to make the daily commute (hh:mm) [18:00]
+- Advance notice time (number) [15]
