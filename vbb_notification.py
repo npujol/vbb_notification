@@ -30,8 +30,7 @@ class Notification:
     def send_notification(self):
         now = dt.datetime.now()
         plyerNotification.notify(
-            title=f"""It's already {now.strftime('%H:%M')}, 
-                    it's time to go!"""
+            title=f"""It's already {now.strftime('%H:%M')}, it's time to go!""",
             message=self.message,
             timeout=self.interval,
         )
@@ -85,8 +84,8 @@ class VBBJourney:
                 data = response.json()["journeys"][0]["legs"][0]
                 journey = Journey(
                     data["tripId"],
-                    data["departure"],
-                    data["plannedDeparture"],
+                    dt.datetime.fromisoformat(data["departure"]),
+                    dt.datetime.fromisoformat(data["plannedDeparture"]),
                     data["departureDelay"],
                     data["line"]["name"],
                     data["line"]["mode"],
@@ -104,8 +103,8 @@ class VBBJourney:
                  - Line name: {journey.line}
                  - Origin: {self.from_station.name}
                  - Destiny:{self.to_station.name}
-                 - Departure: {journey.departure}
-                 - Planned Departure: {journey.plannedDeparture}
+                 - Departure: {journey.departure.strftime('%H:%M')}
+                 - Planned Departure: {journey.plannedDeparture.strftime('%H:%M')}
                  - Departure Delay {journey.departureDelay}
                 """
 
@@ -137,12 +136,20 @@ def cli():
 @click.option(
     "--time_before",
     prompt="Advance notice time (number)",
-    default=1,
+    default=15,
     help="Advance notice time (int)",
 )
 def setup_VBBJourney(your_location, address_to_go, time_to_go, time_before):
     vbb = VBBJourney(your_location, address_to_go)
     hour, minute = map(int, time_to_go.split(":"))
+
+    msg = f"""
+        This is what your notification should look like.
+        *************************
+            {vbb.get_message()}"""
+
+    example = Notification(msg)
+    example.send_notification()
 
     while True:
         # Sleep until X minutes before the desired time.
@@ -152,8 +159,7 @@ def setup_VBBJourney(your_location, address_to_go, time_to_go, time_before):
         future = desired_time - minutes
 
         if t.hour >= hour:
-            # future += datetime.timedelta(days=1)
-            future += datetime.timedelta(minute=15)
+            future += datetime.timedelta(days=1)
 
         time.sleep((future - t).total_seconds())
 
