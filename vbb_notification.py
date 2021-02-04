@@ -152,16 +152,16 @@ def setup_VBBJourney(your_location, address_to_go, time_to_go, time_before):
     example.send_notification()
 
     while True:
-        # Sleep until X minutes before the desired time.
-        t = dt.datetime.today()
-        desired_time = dt.datetime(t.year, t.month, t.day, hour, minute)
+        today = dt.datetime.today()
+        desired_time = dt.datetime(today.year, today.month, today.day, hour, minute)
         minutes = dt.timedelta(minutes=time_before)
         future = desired_time - minutes
 
-        if t.hour >= hour:
-            future += datetime.timedelta(days=1)
+        if dt.datetime.now() >= future:
+            future += dt.timedelta(days=1)
 
-        time.sleep((future - t).total_seconds())
+        # Sleep until X minutes before the desired time.
+        time.sleep((future - dt.datetime.now()).total_seconds())
 
         msg = vbb.get_message()
         notification = Notification(msg)
